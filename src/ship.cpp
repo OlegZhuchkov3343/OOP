@@ -1,7 +1,7 @@
 #include "ship.h"
 
 
-Ship::Ship(int length) : length(length) {
+Ship::Ship(int length) : length(length){
     if (length < 1 || length > 4){
         throw std::invalid_argument("Invalid ship length.");
     }

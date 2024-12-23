@@ -15,6 +15,8 @@ bool Game::startGame(std::vector<ShipPlacementArgs> player_ships, std::vector<Sh
         std::cout << e.what() << std::endl;
         return false;
     }
+    pshipargs = player_ships;
+    eshipargs = enemy_ships;
     game_started = true;
     turn = 1;
     player_field.revealField();
@@ -87,4 +89,16 @@ void Game::displayField() {
     enemy_field.printField();
     std::cout << "Your field" << std::endl;
     player_field.printField();
+}
+
+void Game::save() {
+    GameState state = GameState(pshipargs, eshipargs, player_field, enemy_field, player_abilities);
+    state.serialize();
+}
+
+void Game::load() {
+    GameState state = GameState(pshipargs, eshipargs, player_field, enemy_field, player_abilities);
+    state.deserialize(player_ships, enemy_ships, player_abilities);
+    player_field = state.player_field;
+    enemy_field = state.enemy_field;
 }

@@ -5,6 +5,7 @@
 #include "shipmanager.h"
 #include "abilitymanager.h"
 #include "enemyai.h"
+#include "gamestate.h"
 
 
 
@@ -14,6 +15,8 @@ private:
     int field_cols;
     GameField player_field;
     GameField enemy_field;
+    std::vector<ShipPlacementArgs> pshipargs;
+    std::vector<ShipPlacementArgs> eshipargs;
     ShipManager player_ships;
     ShipManager enemy_ships;
     AbilityManager player_abilities;
@@ -32,5 +35,7 @@ public:
     void nextTurn();
     void nextRound();
     void displayField();
+    void save();
+    void load();
 };
 #endif

@@ -182,3 +182,7 @@ GameField& GameField::operator=(GameField&& other){
         this->swap(other);
     return *this;
 }
+
+Cell** GameField::get_field(){
+    return field;
+}

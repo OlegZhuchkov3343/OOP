@@ -32,6 +32,7 @@ public:
     GameField& operator=(const GameField& other);
     GameField(GameField&& other);
     GameField& operator=(GameField&& other);
+    Cell** get_field();
 };
 
 #endif

@@ -48,8 +48,11 @@ void AbilityManager::popAbility() {
     abilities.pop();
 }
 
-
-
 std::string AbilityManager::getAbilityName() const {
     return abilities.front()->name();
 }
+
+std::queue<Ability*> AbilityManager::getAll() {
+    return this->abilities;
+}
+

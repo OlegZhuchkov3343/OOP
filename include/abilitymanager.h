@@ -18,5 +18,6 @@ public:
     void popAbility();
     Ability* createAbility(Abilities ability);
     std::string getAbilityName() const;
+    std::queue<Ability*> getAll();
 };
 #endif
