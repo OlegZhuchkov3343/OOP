@@ -13,6 +13,7 @@ nlohmann::json GameState::to_json(){
     j["enemy"] = to_json(enemy_ships);
     j["enemy"]["field"] = to_json(enemy_field);
     j["ability"] = to_json(player_abilities);
+    return j;
 }
 
 
@@ -107,7 +108,7 @@ void GameState::from_json(nlohmann::json j, ShipManager& player_manager, ShipMan
     from_json_field(j["enemy"], enemy_manager, false);
 }
 void GameState::from_json_ships(nlohmann::json j, ShipManager& manager, bool player){
-    for (nlohmann::json ship : j["ships"]){
+    for (nlohmann::json ship : j){
         manager.newShip(ship["length"]);
         if (player)
         player_field.placeShip(manager.getShip(), {ship["x"],ship["y"]}, ship["horizontal"]);
@@ -116,6 +117,7 @@ void GameState::from_json_ships(nlohmann::json j, ShipManager& manager, bool pla
     }
 }
 void GameState::from_json_ability(nlohmann::json j, AbilityManager& manager){
+    if (j.is_null()) return;
     for (int ability : j["abilities"]){
         switch(ability){
             case 0:{
@@ -133,19 +135,19 @@ void GameState::from_json_ability(nlohmann::json j, AbilityManager& manager){
 void GameState::from_json_field(nlohmann::json j, ShipManager& manager, bool player){
     Cell** table;
     if (player){
-        player_field = GameField(j["rows"], j["cols"]);
+        player_field = GameField(j["field"]["rows"], j["field"]["cols"]);
         from_json_ships(j["ships"], manager, player);
         table = player_field.get_field();
     }
     else{
-        enemy_field = GameField(j["rows"], j["cols"]);
+        enemy_field = GameField(j["field"]["rows"], j["field"]["cols"]);
         from_json_ships(j["ships"], manager, player);
         table = enemy_field.get_field();
     }
-    for (int x = 0; x < j["rows"]; x++)
-        for (int y = 0; y < j["cols"]; y++){
+    for (int x = 0; x < j["field"]["rows"]; x++)
+        for (int y = 0; y < j["field"]["cols"]; y++){
             std::string key = std::to_string(x) + std::to_string(y);
-            switch ((int) j["table"][key]["state"])
+            switch ((int) j["field"]["table"][key]["state"])
             {
             case 0:
                 table[x][y].set_status(CellStatus::Unknown);
@@ -157,7 +159,7 @@ void GameState::from_json_field(nlohmann::json j, ShipManager& manager, bool pla
                 table[x][y].set_status(CellStatus::ShipFound);
                 break;
             }
-            switch ((int) j["table"][key]["ship"])
+            switch ((int) j["field"]["table"][key]["ship"])
             {
             case 3 :
                 table[x][y].get_segment()->set_status(Intact);
